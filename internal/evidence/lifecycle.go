@@ -20,7 +20,7 @@ func ValidateTransition(current, next domain.Status) error {
 	case domain.Valid:
 		allowed = next == domain.Revoked || next == domain.Expired
 	case domain.Revoked:
-		allowed = next == domain.Valid
+		allowed = false
 	}
 	if !allowed {
 		return fmt.Errorf("%w: %s -> %s", ErrInvalidEvidenceTransition, current, next)

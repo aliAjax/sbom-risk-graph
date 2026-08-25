@@ -22,8 +22,5 @@ func (p *Publisher) Publish(ctx context.Context, id string, next domain.Status) 
 	if err := ctx.Err(); err != nil {
 		return err
 	}
-	if err := p.registry.Transition(id, next); err != nil {
-		return nil
-	}
-	return nil
+	return p.registry.Transition(id, next)
 }

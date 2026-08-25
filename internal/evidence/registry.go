@@ -35,10 +35,10 @@ func (r *Registry) Transition(id string, next domain.Status) error {
 		return fmt.Errorf("evidence %s not found", id)
 	}
 	previous := item.Status
-	item.Status = next
-	r.values[id] = item
 	if err := ValidateTransition(previous, next); err != nil {
 		return err
 	}
+	item.Status = next
+	r.values[id] = item
 	return nil
 }
