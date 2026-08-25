@@ -6,18 +6,20 @@ import (
 	"io"
 )
 
-var sharedReaderDigest = sha256.New()
-var sharedReaderBuffer [32 * 1024]byte
-
 func HexReader(r io.Reader) (string, error) {
+	digest := sha256.New()
+	buf := make([]byte, 32*1024)
 	for {
-		n, err := r.Read(sharedReaderBuffer[:])
+		n, err := r.Read(buf)
 		if n > 0 {
-			_, _ = sharedReaderDigest.Write(sharedReaderBuffer[:n])
+			_, _ = digest.Write(buf[:n])
 		}
 		if err != nil {
+			if err != io.EOF {
+				return "", err
+			}
 			break
 		}
 	}
-	return hex.EncodeToString(sharedReaderDigest.Sum(nil)), nil
+	return hex.EncodeToString(digest.Sum(nil)), nil
 }
