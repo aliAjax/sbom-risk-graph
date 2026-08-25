@@ -1,0 +1,7 @@
+http:
+  addr: ":8123"
+  read_timeout: 20s
+storage:
+  data_dir: "./data"
+security:
+  signer_secret_ref: "secret/sbom/signer"
