@@ -7,16 +7,10 @@ import (
 	"strings"
 )
 
-type Evaluator struct{ last *domain.Policy }
+type Evaluator struct{}
 
 func New() *Evaluator { return &Evaluator{} }
 func (e *Evaluator) Evaluate(p domain.Policy, components []domain.Component, adv func(domain.Component) []domain.Advisory, evidence bool) []domain.Violation {
-	if e.last != nil && e.last.ID == p.ID {
-		p = *e.last
-	} else {
-		snapshot := p
-		e.last = &snapshot
-	}
 	out := make([]domain.Violation, 0)
 	denied := make(map[string]bool)
 	for _, l := range p.DeniedLicenses {

@@ -128,7 +128,11 @@ func (p Policy) NextRevision(current Policy) (Policy, error) {
 		return Policy{}, fmt.Errorf("policy revision belongs to another policy")
 	}
 	if p.Revision == 0 {
-		p.Revision = current.Revision
+		p.Revision = current.Revision + 1
+		return p, nil
+	}
+	if current.ID != "" && p.Revision <= current.Revision {
+		return Policy{}, fmt.Errorf("policy revision %d does not advance current %d", p.Revision, current.Revision)
 	}
 	return p, nil
 }

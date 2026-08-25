@@ -25,5 +25,5 @@ func (h *History) Latest(id string) (domain.Policy, bool) {
 	if len(items) == 0 {
 		return domain.Policy{}, false
 	}
-	return items[0], true
+	return items[len(items)-1], true
 }

@@ -32,7 +32,7 @@ func (e *Exemptions) Active(policy, component string, now time.Time) bool {
 	e.mu.RLock()
 	defer e.mu.RUnlock()
 	for _, v := range e.values {
-		if v.PolicyID == policy && v.Component == component && !now.After(v.ExpiresAt) {
+		if v.PolicyID == policy && v.Component == component && now.Before(v.ExpiresAt) {
 			return true
 		}
 	}
