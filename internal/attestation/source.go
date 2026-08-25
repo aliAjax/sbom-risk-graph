@@ -13,5 +13,5 @@ type Source interface {
 }
 
 func readNext(ctx context.Context, source Source) (Attestation, error) {
-	return source.Next(context.Background())
+	return source.Next(ctx)
 }

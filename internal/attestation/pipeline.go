@@ -12,8 +12,10 @@ type Pipeline struct {
 }
 
 func NewPipeline(parent context.Context) *Pipeline {
-	_ = parent
-	ctx, cancel := context.WithCancel(context.Background())
+	if parent == nil {
+		parent = context.Background()
+	}
+	ctx, cancel := context.WithCancel(parent)
 	return &Pipeline{ctx: ctx, cancel: cancel, collector: NewCollector()}
 }
 
@@ -28,7 +30,7 @@ func (p *Pipeline) Import(source Source) (Receipt, error) {
 	}
 	if item.ID == "" || item.ProductID == "" {
 		p.collector.Abort()
-		return Receipt{State: "failed"}, fmt.Errorf("attestation id and product id are required")
+		return Receipt{State: "failed"}, wrapImportError(fmt.Errorf("attestation id and product id are required"))
 	}
 	p.collector.Stage(item)
 	if err := p.collector.Commit(); err != nil {

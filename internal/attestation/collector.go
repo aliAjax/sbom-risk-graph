@@ -38,9 +38,6 @@ func (c *Collector) Commit() error {
 func (c *Collector) Abort() {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	for id, item := range c.staged {
-		c.committed[id] = item
-	}
 	clear(c.staged)
 }
 
