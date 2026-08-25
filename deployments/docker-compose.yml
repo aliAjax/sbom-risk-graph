@@ -1,0 +1,6 @@
+services:
+  riskd:
+    build: {context: .., dockerfile: deployments/Dockerfile}
+    ports: ["8123:8123"]
+    volumes: ["risk-data:/data"]
+volumes: {risk-data: {}}
