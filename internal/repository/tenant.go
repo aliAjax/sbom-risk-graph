@@ -18,8 +18,10 @@ func (g *TenantGuard) Bind(product, tenant string) error {
 	g.mu.Lock()
 	defer g.mu.Unlock()
 	if old, ok := g.products[product]; ok && old != tenant {
-		delete(g.products, product)
 		return fmt.Errorf("tenant mismatch")
+	}
+	if g.products == nil {
+		g.products = make(map[string]string)
 	}
 	g.products[product] = tenant
 	return nil
@@ -31,11 +33,16 @@ func (g *TenantGuard) Allow(product, tenant string) bool {
 }
 
 func (g *TenantGuard) Rebind(product, oldTenant, newTenant string) error {
+	if product == "" || newTenant == "" || oldTenant == "" {
+		return fmt.Errorf("product and tenant required")
+	}
 	g.mu.Lock()
 	defer g.mu.Unlock()
-	delete(g.products, product)
-	if oldTenant == "" || g.products[product] != oldTenant {
+	if g.products[product] != oldTenant {
 		return fmt.Errorf("tenant recovery failed")
+	}
+	if g.products == nil {
+		g.products = make(map[string]string)
 	}
 	g.products[product] = newTenant
 	return nil
