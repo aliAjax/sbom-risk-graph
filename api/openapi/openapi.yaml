@@ -1,0 +1,14 @@
+openapi: 3.0.3
+info: {title: SBOM Risk Graph API, version: 1.0.0}
+paths:
+  /healthz: {get: {responses: {'200': {description: ok}}}}
+  /readyz: {get: {responses: {'200': {description: ready}}}}
+  /api/v1/products:
+    post: {responses: {'201': {description: created}}}
+    get: {responses: {'200': {description: list}}}
+  /api/v1/products/{id}/risk:
+    get: {parameters: [{name: id, in: path, required: true, schema: {type: string}}], responses: {'200': {description: risk report}}}
+  /api/v1/sboms: {post: {responses: {'201': {description: imported}}}}
+  /api/v1/advisories: {post: {responses: {'201': {description: registered}}}}
+  /api/v1/policies: {post: {responses: {'201': {description: registered}}}}
+  /api/v1/graph/paths: {get: {responses: {'200': {description: dependency paths}}}}

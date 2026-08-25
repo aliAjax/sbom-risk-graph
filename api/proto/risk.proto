@@ -1,0 +1,10 @@
+syntax = "proto3";
+package risk.v1;
+option go_package = "example.com/sbom-risk-graph/api/proto;riskpb";
+service Risk { rpc ImportSBOM(ImportRequest) returns (SBOM); rpc Evaluate(EvaluateRequest) returns (RiskReport); rpc VerifyEvidence(VerifyRequest) returns (VerifyResponse); }
+message ImportRequest { string id=1; string product_id=2; string format=3; bytes document=4; }
+message SBOM { string id=1; string digest=2; uint32 components=3; }
+message EvaluateRequest { string product_id=1; }
+message RiskReport { string product_id=1; double score=2; uint32 vulnerabilities=3; }
+message VerifyRequest { string evidence_id=1; }
+message VerifyResponse { bool valid=1; string reason=2; }
