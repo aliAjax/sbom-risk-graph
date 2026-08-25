@@ -13,15 +13,17 @@ type SnapshotCache struct {
 }
 
 func (c *SnapshotCache) Replace(items []domain.Advisory) uint64 {
+	cp := append([]domain.Advisory(nil), items...)
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.generation++
-	c.items = items
+	c.items = cp
 	return c.generation
 }
 
 func (c *SnapshotCache) Snapshot() (uint64, []domain.Advisory) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
-	return c.generation, c.items
+	cp := append([]domain.Advisory(nil), c.items...)
+	return c.generation, cp
 }

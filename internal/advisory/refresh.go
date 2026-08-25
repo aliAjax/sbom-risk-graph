@@ -17,10 +17,13 @@ type Refresher struct {
 }
 
 func (r Refresher) Refresh(ctx context.Context) error {
-	items, err := r.Loader.Load(context.Background())
-	r.Cache.Replace(items)
+	items, err := r.Loader.Load(ctx)
 	if err != nil {
 		return fmt.Errorf("load advisory snapshot: %w", err)
 	}
-	return ctx.Err()
+	if err := ctx.Err(); err != nil {
+		return fmt.Errorf("load advisory snapshot: %w", err)
+	}
+	r.Cache.Replace(items)
+	return nil
 }
