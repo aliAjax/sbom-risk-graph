@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: sbom-risk-graph}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: sbom-risk-graph}}
+  template:
+    metadata: {labels: {app: sbom-risk-graph}}
+    spec:
+      containers:
+      - name: riskd
+        image: sbom-risk-graph:local
+        args: ["-addr", ":8123", "-data-dir", "/data"]
+        ports: [{containerPort: 8123, name: http}]
+        readinessProbe: {httpGet: {path: /readyz, port: http}}
+        livenessProbe: {httpGet: {path: /healthz, port: http}}
+        volumeMounts: [{name: data, mountPath: /data}]
+      volumes: [{name: data, emptyDir: {}}]
